@@ -168,11 +168,10 @@ public class MainActivity extends Activity implements SelectionListener,
 		// Unregister the BroadcastReceiver if it has been registered
 		// Note: check that mRefreshReceiver is not null before attempting to
 		// unregister in order to work around an Instrumentation issue
+		if (mRefreshReceiver != null) {
+			unregisterReceiver(mRefreshReceiver);
+		}
 
-
-		
-		
-		
 		super.onPause();
 
 	}
