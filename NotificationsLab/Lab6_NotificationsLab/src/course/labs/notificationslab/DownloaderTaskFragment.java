@@ -185,19 +185,14 @@ public class DownloaderTaskFragment extends Fragment {
 							// TODO: Check whether or not the MainActivity
 							// received the broadcast
 
-							if (true || false) {
+							if (getResultCode() != Activity.RESULT_OK) {
 
 								// TODO: If not, create a PendingIntent using
 								// the
 								// restartMainActivityIntent and set its flags
 								// to FLAG_UPDATE_CURRENT
-
-
-
-
-
-
-
+								
+								PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, restartMainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 								// Uses R.layout.custom_notification for the
 								// layout of the notification View. The xml
