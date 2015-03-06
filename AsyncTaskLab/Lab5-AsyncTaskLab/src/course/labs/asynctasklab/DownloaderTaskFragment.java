@@ -34,7 +34,7 @@ public class DownloaderTaskFragment extends Fragment {
 		// Prepare them for use with DownloaderTask.
 		Bundle bundle = this.getArguments();
 		
-		ArrayList<Integer> resourceIDS = bundle.getIntegerArrayList("friends");
+		ArrayList<Integer> resourceIDS = bundle.getIntegerArrayList(MainActivity.TAG_FRIEND_RES_IDS);
  
 		// TODO: Start the DownloaderTask
 		downloadTask.execute(resourceIDS);
