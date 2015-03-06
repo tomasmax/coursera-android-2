@@ -34,7 +34,7 @@ public class DownloaderTaskFragment extends Fragment {
 		// Prepare them for use with DownloaderTask.
 		Bundle bundle = this.getArguments();
 		
-		ArrayList<Integer> resourceIDS = bundle.getIntegerArrayList(MainActivity.TAG_FRIEND_RES_IDS);
+		Integer[] resourceIDS = bundle.getIntegerArrayList(MainActivity.TAG_FRIEND_RES_IDS).toArray(new Integer[]{});
  
 		// TODO: Start the DownloaderTask
 		downloadTask.execute(resourceIDS);
@@ -71,21 +71,16 @@ public class DownloaderTaskFragment extends Fragment {
 	// out). Ultimately, it must also pass newly available data back to
 	// the hosting Activity using the DownloadFinishedListener interface.
 
-	public class DownloaderTask extends AsyncTask<ArrayList<Integer>, Integer, String[]> {
+	public class DownloaderTask extends AsyncTask<Integer, Integer, String[]> {
 
 		@Override
-		protected String[] doInBackground(ArrayList<Integer>... arrayLists) {
-			ArrayList<Integer> data = arrayLists[0];
-            Integer[] resourceIDS = new Integer[data.size()];
-            for(int i=0;i<data.size();i++){
-            	resourceIDS[i]=data.get(i);
-            }
-			return downloadTweets(resourceIDS);
+		protected String[] doInBackground(Integer... params) {
+			return downloadTweets(params);
 		}
 		
 		@Override
-        protected void onPostExecute(String[] strings) {
-            mCallback.notifyDataRefreshed(strings);
+        protected void onPostExecute(String[] result) {
+            mCallback.notifyDataRefreshed(result);
         }
 
 		// Simulates downloading Twitter data from the network
