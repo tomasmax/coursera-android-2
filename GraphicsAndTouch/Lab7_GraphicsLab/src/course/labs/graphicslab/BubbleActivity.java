@@ -153,22 +153,27 @@ public class BubbleActivity extends Activity {
 			@Override
 			public boolean onSingleTapConfirmed(MotionEvent event) {
 
-				// TODO - Implement onSingleTapConfirmed actions.
+				// Implement onSingleTapConfirmed actions.
 				// You can get all Views in mFrame using the
 				// ViewGroup.getChildCount() method
-
-
 				
+				float eventX = event.getRawX();
+				float eventY = event.getRawY();
+				boolean bubbleFound = false;
+				for (int i=0; i < mFrame.getChildCount(); i++) {
+					BubbleView currentBubble = (BubbleView) mFrame.getChildAt(i);
+					if (currentBubble.intersects(eventX, eventY)) {
+						currentBubble.stopMovement(true);
+						bubbleFound = true;
+						break;
+					}
+				}
 				
-				
-				
-				
-				
-				
-				
-				
-				
-				
+				if (!bubbleFound) {
+					BubbleView newBubble = new BubbleView(mFrame.getContext(), eventX, eventY);
+					mFrame.addView(newBubble);
+					newBubble.startMovement();
+				}
 				
 				return true;
 			}
@@ -178,15 +183,11 @@ public class BubbleActivity extends Activity {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
-		// TODO - Delegate the touch to the gestureDetector
-
+		// Delegate the touch to the gestureDetector
+		if (mGestureDetector != null)
+			return mGestureDetector.onTouchEvent(event);
 		
-
-		
-		
-		
-		
-		return true || false;
+		return false;
 		
 	}
 
@@ -194,11 +195,11 @@ public class BubbleActivity extends Activity {
 	protected void onPause() {
 
 		// TODO - Release all SoundPool resources
-
-
-
-		
-		
+		if (mSoundPool != null) {
+			mSoundPool.unload(mSoundID);
+			mSoundPool.release();
+			mSoundPool = null;
+		}
 		
 		super.onPause();
 	}
