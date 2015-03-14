@@ -194,7 +194,7 @@ public class BubbleActivity extends Activity {
 	@Override
 	protected void onPause() {
 
-		// TODO - Release all SoundPool resources
+		// Release all SoundPool resources
 		if (mSoundPool != null) {
 			mSoundPool.unload(mSoundID);
 			mSoundPool.release();
@@ -252,8 +252,8 @@ public class BubbleActivity extends Activity {
 		private void setRotation(Random r) {
 			if (speedMode == RANDOM) {
 
-				// TODO - set rotation in range [1..3]
-
+				// set rotation in range [1..3]
+				mRotate = r.nextInt(3) + 1;
 				
 			} else {
 				mDRotate = 0;
@@ -280,16 +280,11 @@ public class BubbleActivity extends Activity {
 
 			default:
 
-				// TODO - Set mDx and mDy to indicate movement direction and speed 
+				// Set mDx and mDy to indicate movement direction and speed 
 				// Limit speed in the x and y direction to [-3..3] pixels per movement.
 
-
-				
-				
-				
-				
-				
-				
+				mDx = r.nextInt(7) - 3;
+				mDy = r.nextInt(7) - 3;				
 				
 			}
 		}
@@ -300,14 +295,14 @@ public class BubbleActivity extends Activity {
 				mScaledBitmapWidth = BITMAP_SIZE * 3;
 			} else {
 
-				// TODO - set scaled bitmap size in range [1..3] * BITMAP_SIZE
-
+				// set scaled bitmap size in range [1..3] * BITMAP_SIZE
+				mScaledBitmapWidth = BITMAP_SIZE * 3;
 
 				
 			}
 
-			// TODO - create the scaled bitmap using size set above
-
+			// create the scaled bitmap using size set above
+			mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, mScaledBitmapWidth, mScaledBitmapWidth, true);
 
 		}
 
@@ -325,17 +320,16 @@ public class BubbleActivity extends Activity {
 				@Override
 				public void run() {
 
-					// TODO - implement movement logic.
+					// implement movement logic.
 					// Each time this method is run the BubbleView should
 					// move one step. If the BubbleView exits the display,
 					// stop the BubbleView's Worker Thread.
 					// Otherwise, request that the BubbleView be redrawn.
-
-
-					
-					
-					
-					
+					if (moveWhileOnScreen()) {
+						stopMovement(true);
+						mMoverFuture.cancel(true);
+					}
+					BubbleView.this.postInvalidate();
 				}
 			}, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);
 		}
@@ -343,14 +337,17 @@ public class BubbleActivity extends Activity {
 		// Returns true if the BubbleView intersects position (x,y)
 		private synchronized boolean intersects(float x, float y) {
 
-			// TODO - Return true if the BubbleView intersects position (x,y)
-
-
-
+			// Return true if the BubbleView intersects position (x,y)
+			if ((x >= mXPos) && (x <= mXPos + mScaledBitmap.getWidth() / 2)
+				&& ((y >= mYPos) && (y <= mYPos + mScaledBitmap.getHeight() / 2))){
+				Log.i(TAG, "Intersects return true");
+				return true;
+			}
+			else {
+				Log.i(TAG, "Intersects return false");
+				return false;
+			}
 			
-			
-			return  true || false;
-
 		}
 
 		// Cancel the Bubble's movement
@@ -370,17 +367,13 @@ public class BubbleActivity extends Activity {
 					@Override
 					public void run() {
 
-						// TODO - Remove the BubbleView from mFrame
+						// Remove the BubbleView from mFrame
+						mFrame.removeView(BubbleView.this);
 
-
-						
-						// TODO - If the bubble was popped by user,
+						// If the bubble was popped by user,
 						// play the popping sound
 						if (wasPopped) {
-
-
-
-							
+							mSoundPool.play(mSoundID, mStreamVolume, mStreamVolume, 1, 0, 1);		
 						}
 					}
 				});
