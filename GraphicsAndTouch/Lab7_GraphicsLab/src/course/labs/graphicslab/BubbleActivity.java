@@ -390,41 +390,38 @@ public class BubbleActivity extends Activity {
 		@Override
 		protected synchronized void onDraw(Canvas canvas) {
 
-			// TODO - save the canvas
-
-
-			
-			// TODO - increase the rotation of the original image by mDRotate
-
+			//save the canvas
+			canvas.save();
 
 			
-			// TODO Rotate the canvas by current rotation
+			// increase the rotation of the original image by mDRotate
+			mRotate += mDRotate;
+			
+			// Rotate the canvas by current rotation
 			// Hint - Rotate around the bubble's center, not its position
-
-
-
+			canvas.rotate(mRotate, mXPos, mYPos);
 			
-			// TODO - draw the bitmap at it's new location
+			// draw the bitmap at it's new location
+			canvas.drawBitmap(mBitmap, mXPos, mYPos, mPainter);
 
+			// restore the canvas
+			canvas.restore();
 
-			
-			// TODO - restore the canvas
-
-
-			
 		}
 
 		// Returns true if the BubbleView is still on the screen after the move
 		// operation
 		private synchronized boolean moveWhileOnScreen() {
 
-			// TODO - Move the BubbleView
+			// Move the BubbleView
+			if (isOutOfView()) {
+				return true;
+			} else {
+				mXPos += mDx;
+				mYPos += mDy;
 
-
-
-			
-			
-			return isOutOfView();
+			}
+			return false;
 
 		}
 
@@ -432,11 +429,18 @@ public class BubbleActivity extends Activity {
 		// operation
 		private boolean isOutOfView() {
 
-			// TODO - Return true if the BubbleView is still on the screen after
+			// Return true if the BubbleView is still on the screen after
 			// the move operation
+			if ((mXPos - mScaledBitmapWidth / 2 >= mDisplayWidth)
+					|| (mXPos < 0)
+					|| (mYPos - mScaledBitmapWidth / 2 >= mDisplayHeight)
+					|| (mYPos < 0)) {
+				Log.i(TAG, "isOutOfView return true");
 
-			
-			return true || false;
+				return true;
+			}
+
+			return false;
 
 		}
 	}
