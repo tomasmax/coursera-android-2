@@ -46,49 +46,50 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		ListView placesListView = getListView();
 
-		// TODO - add a footerView to the ListView
+		// add a footerView to the ListView
 		// You can use footer_view.xml to define the footer
+		placesListView.setFooterDividersEnabled(true);
+        View footerView = getLayoutInflater().inflate(R.layout.footer_view, placesListView,false);
+        placesListView.addFooterView(footerView);
 
-        View footerView = null;
-
-		// TODO - footerView must respond to user clicks, handling 3 cases:
-
-		// There is no current location - response is up to you. The best
-		// solution is to always disable the footerView until you have a
-		// location.
-
-		// There is a current location, but the user has already acquired a
-		// PlaceBadge for this location - issue a Toast message with the text -
-		// "You already have this location badge." 
-		// Use the PlaceRecord class' intersects() method to determine whether 
-		// a PlaceBadge already exists for a given location
-
-		// There is a current location for which the user does not already have
-		// a PlaceBadge. In this case download the information needed to make a new
-		// PlaceBadge.
+		// footerView must respond to user clicks, handling 3 cases:
 
 		footerView.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				Log.i(TAG, "Entered footerView.OnClickListener.onClick()");
+				
+				boolean lastLocation = mLastLocationReading != null && ageInMilliseconds(mLastLocationReading) < FIVE_MINS;
 
-
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
+                if (!lastLocation) {
+                	// There is no current location - response is up to you. The best
+            		// solution is to always disable the footerView until you have a
+            		// location.
+                	Log.i(TAG, "There is no current location");
+                	
+                } else {
+                	boolean alreadyInList = mAdapter.intersects(mLastLocationReading);
+                	
+                	if (alreadyInList){
+                		// There is a current location, but the user has already acquired a
+                		// PlaceBadge for this location - issue a Toast message with the text -
+                		// "You already have this location badge." 
+                		// Use the PlaceRecord class' intersects() method to determine whether 
+                		// a PlaceBadge already exists for a given location
+                		Log.i(TAG, "You already have this location badge");
+                        Toast.makeText(arg0.getContext(), "You already have this location badge", Toast.LENGTH_LONG).show();
+                	} else {
+                		// There is a current location for which the user does not already have
+                		// a PlaceBadge. In this case download the information needed to make a new
+                		// PlaceBadge.
+                		Log.i(TAG, "Download information to make a new PlaceBadge");
+                		new PlaceDownloaderTask(PlaceViewActivity.this, true);
+                		
+                	}
+                	
+                }
+        
                 
 			}
 
