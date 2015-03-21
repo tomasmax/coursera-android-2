@@ -148,6 +148,11 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 			// "PlaceBadge could not be acquired"
 			// Do not add the PlaceBadge to the adapter
 			Toast.makeText(this, "PlaceBadge could not be acquired", Toast.LENGTH_LONG).show();
+		} else if (place.getPlace() == null) {
+			// The place has no country name - issue a Toast message
+			// with the text - "There is no country at this location". 
+			// Do not add the PlaceBadge to the adapter
+			Toast.makeText(this, "There is no country at this location", Toast.LENGTH_LONG).show();
 		} else {
 			// Otherwise - add the PlaceBadge to the adapter
 			mAdapter.add(place);  
